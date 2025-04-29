@@ -1,0 +1,23 @@
+{% extends 'steganography/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2><i class="fas fa-user-secret"></i> Decode a Stego File</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Reveal Message</button>
+    </form>
+
+    {% if message %}
+        <div class="result-box">
+            <h3>✅ Hidden Message:</h3>
+            <p>{{ message }}</p>
+        </div>
+    {% elif error %}
+        <div class="error-box">
+            <strong>Error:</strong> {{ error }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

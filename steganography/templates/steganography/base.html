@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steganography Project</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="scanner-effect"></div>
+    
+    <header>
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="logo">
+                    <a href="/">
+                        <span class="logo-icon"><i class="fas fa-eye"></i></span>
+                        <span class="logo-text">SPY<span class="logo-highlight">VERSE</span></span>
+                    </a>
+                </div>
+                
+                <div class="nav-links">
+                    <a href="/" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>HOME</span>
+                    </a>
+                    <a href="/upload" class="nav-link">
+                        <i class="fas fa-file-upload"></i>
+                        <span>UPLOAD</span>
+                    </a>
+                    <a href="/decode" class="nav-link">
+                        <i class="fas fa-user-secret"></i>
+                        <span>DECODE</span>
+                    </a>
+                </div>
+                
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content-container">
+            {% block extra_content %}
+            <!-- home page content will go here -->
+            {% endblock %}
+
+            {% block content %}
+            <!-- Page-specific content will go here -->
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-text">TOP SECRET | CLASSIFIED | LEVEL 5 CLEARANCE</div>
+            <div class="footer-copyright">© 2025 SPYVERSE | For Authorized Personnel Only</div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

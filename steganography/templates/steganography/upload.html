@@ -1,0 +1,13 @@
+{% extends 'steganography/base.html' %}
+{% block content %}
+    <!-- Page-specific content will go here -->
+    <div class="container">
+        <h1>🔒 Hide your secret inside a file</h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload and Hide Secret</button>
+        </form>
+    </div>
+{% endblock %}

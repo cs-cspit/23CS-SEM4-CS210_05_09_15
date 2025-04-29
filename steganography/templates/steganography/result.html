@@ -1,0 +1,8 @@
+{% extends 'steganography/base.html' %}
+
+{% block content %}
+<h2>Stego File Created Successfully!</h2>
+<p>You can now download your stego file below:</p>
+
+<a href="{{ stego_url }}" download>Download Stego File</a>
+{% endblock %}
