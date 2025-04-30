@@ -15,45 +15,98 @@ def home(request):
 # def upload(request):
 #     return HttpResponse('upload')#render(request, 'core/upload.html')
 
+# def upload(request):
+#     if request.method == 'POST':
+#         form = UploadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             upload_obj = form.save(commit=False)  # Save file/type but not yet commit to DB
+
+#             secret_message = form.cleaned_data['secret_message']
+#             password = form.cleaned_data['password']
+            
+#             # Encrypt the message
+#             encrypted_json = encrypt_message(secret_message, password)
+
+#             # Paths
+#             original_path = upload_obj.original_file
+#             filename = os.path.basename(original_path.name)
+
+#             # Save the uploaded original file
+#             upload_obj.save()
+
+#             # Now hide data based on type
+#             input_path = upload_obj.original_file.path
+
+#             # Generate stego output path
+#             if upload_obj.upload_type == 'image':
+#                 output_path = input_path.replace('original_files', 'stego_files')
+#                 hide_data_in_image(input_path, encrypted_json, output_path)
+
+#             elif upload_obj.upload_type == 'audio':
+#                 output_path = input_path.replace('original_files', 'stego_files')
+#                 hide_data_in_audio(input_path, encrypted_json, output_path)
+
+#             elif upload_obj.upload_type == 'video':
+#                 output_path = input_path.replace('original_files', 'stego_files')
+#                 hide_data_in_video(input_path, encrypted_json, output_path)
+
+#             else:
+#                 return render(request, 'core/error.html', {'error': 'Unsupported file type'})
+
+#             # Update stego_file field in DB
+#             upload_obj.stego_file.name = output_path.replace(os.path.join(os.getcwd(), 'media') + os.sep, '').replace("\\", "/")
+#             upload_obj.save()
+
+#             return redirect('result', pk=upload_obj.pk)
+#     else:
+#         form = UploadForm()
+
+#     return render(request, 'steganography/upload.html', {'form': form})
+
 def upload(request):
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
-            upload_obj = form.save(commit=False)  # Save file/type but not yet commit to DB
+            upload_obj = form.save(commit=False)
 
             secret_message = form.cleaned_data['secret_message']
             password = form.cleaned_data['password']
-            
+
+            # Get file and filename
+            file = request.FILES['original_file']
+            filename = file.name.lower()
+
+            # Validate file extension vs type
+            upload_type = form.cleaned_data['upload_type']
+            valid_extensions = {
+                'image': ('.png', '.jpg', '.jpeg'),
+                'audio': ('.wav',),
+                'video': ('.avi',)
+            }
+
+            if not filename.endswith(valid_extensions[upload_type]):
+                form.add_error('original_file', f"Selected type '{upload_type}' must be one of: {', '.join(valid_extensions[upload_type])}")
+                return render(request, 'steganography/upload.html', {'form': form})
+
             # Encrypt the message
             encrypted_json = encrypt_message(secret_message, password)
 
-            # Paths
-            original_path = upload_obj.original_file
-            filename = os.path.basename(original_path.name)
-
-            # Save the uploaded original file
+            # Save uploaded file
             upload_obj.save()
 
-            # Now hide data based on type
             input_path = upload_obj.original_file.path
+            output_path = input_path.replace('original_files', 'stego_files')
 
-            # Generate stego output path
-            if upload_obj.upload_type == 'image':
-                output_path = input_path.replace('original_files', 'stego_files')
+            if upload_type == 'image':
                 hide_data_in_image(input_path, encrypted_json, output_path)
-
-            elif upload_obj.upload_type == 'audio':
-                output_path = input_path.replace('original_files', 'stego_files')
+            elif upload_type == 'audio':
                 hide_data_in_audio(input_path, encrypted_json, output_path)
-
-            elif upload_obj.upload_type == 'video':
-                output_path = input_path.replace('original_files', 'stego_files')
+            elif upload_type == 'video':
                 hide_data_in_video(input_path, encrypted_json, output_path)
-
             else:
                 return render(request, 'core/error.html', {'error': 'Unsupported file type'})
 
-            # Update stego_file field in DB
+            # Save output
             upload_obj.stego_file.name = output_path.replace(os.path.join(os.getcwd(), 'media') + os.sep, '').replace("\\", "/")
             upload_obj.save()
 

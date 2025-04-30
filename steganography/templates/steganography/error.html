@@ -1,0 +1,9 @@
+{% extends 'steganography/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2 style="color: red;">🚫 Error</h2>
+        <p>{{ error }}</p>
+        <a href="{% url 'upload' %}">⬅ Back to Upload</a>
+    </div>
+{% endblock %}
